@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "modbus-serial": "^8.0.18"
+    "modbus-serial": "^8.0.18",
+    "node-fetch": "^2.7.0"
   }
 }

@@ -18,6 +18,9 @@ const NUMBER_OF_REGISTERS = 12;
 const RETRY_INTERVAL = 5000; // 5 seconds between retry attempts
 let isConnected = false;
 
+// Add variable to store previous values
+let previousValues = null;
+
 // Modified connect function with retry logic
 async function connectModbus1() {
     try {
@@ -54,19 +57,30 @@ async function readHoldingRegistersFromPLC1() {
     }
 }
 
-// Modified reading loop with error handling
+// Modified reading loop with change detection
 async function startReadingLoop1() {
     setInterval(async () => {
         try {
             const values = await readHoldingRegistersFromPLC1();
             if (values) {
                 const combinedString = values.join('');
-                console.log('Combined string:', combinedString);
+                // Only log if values have changed
+                if (!previousValues || !arraysEqual(values, previousValues)) {
+                    console.log('Combined string:', combinedString);
+                    previousValues = [...values];
+                }
             }
         } catch (error) {
             console.error('Reading loop error:', error.message);
         }
-    }, 1000);
+    }, 250);
+}
+
+// Helper function to compare arrays
+function arraysEqual(a, b) {
+    return Array.isArray(a) && Array.isArray(b) &&
+        a.length === b.length &&
+        a.every((val, index) => val === b[index]);
 }
 
 // Modified API endpoint to exclude the last register

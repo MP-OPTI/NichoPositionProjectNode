@@ -7,151 +7,67 @@ const SOURCE_DIR = path.join(__dirname, 'SOURCE');
 const TEMP_DIR = path.join(__dirname, 'TEMP');
 const SAV_DIR = path.join(__dirname, 'SAV');
 
+// Add settings file path and read settings
+const SETTINGS_PATH = path.join(__dirname, 'settings.txt');
+let divisionFactor = 4; // Default value
+
+// Add filesettings path and array to store patterns
+const FILESETTINGS_PATH = path.join(__dirname, 'filesettings.txt');
+let skipPatterns = ['-VKa']; // Default value with original pattern
+
 // Set to track files that are already being processed
 const processingFiles = new Set();
+
+function loadSkipPatterns() {
+  try {
+    const patternsContent = fs.readFileSync(FILESETTINGS_PATH, 'utf8');
+    const patterns = patternsContent.split('\n')
+      .map(line => line.trim())
+      .filter(line => line.length > 0);
+    
+    if (patterns.length > 0) {
+      skipPatterns = patterns;
+      console.log('Loaded skip patterns:', skipPatterns);
+    } else {
+      console.warn('filesettings.txt is empty, using default pattern: -VKa');
+    }
+  } catch (err) {
+    console.warn('Could not read filesettings.txt, using default pattern: -VKa');
+  }
+}
+
+// Load patterns when server starts
+loadSkipPatterns();
+
+// Watch for changes in filesettings.txt
+fs.watch(FILESETTINGS_PATH, (eventType) => {
+  if (eventType === 'change') {
+    loadSkipPatterns();
+  }
+});
 
 function processImpFile(filename) {
   const sourcePath = path.join(SOURCE_DIR, filename);
   const tempPath = path.join(TEMP_DIR, filename);
   const savPath = path.join(SAV_DIR, filename);
 
-  // Check if file exists to avoid processing an already-removed file
-  fs.stat(sourcePath, (err) => {
+  // First, check if the file contains any skip patterns in the first line
+  fs.readFile(sourcePath, 'utf8', (err, data) => {
     if (err) {
-      if (err.code === 'ENOENT') {
-        console.log(`${filename} no longer exists, skipping.`);
-      } else {
-        console.error(`Error stating ${filename}:`, err);
-      }
+      console.error(`Error reading ${filename}:`, err);
       return;
     }
 
-    // Read and modify the file content
-    fs.readFile(sourcePath, 'utf8', (err, data) => {
-      if (err) {
-        console.error(`Error reading ${filename}:`, err);
-        return;
-      }
-
-      // Remove initial file content logging
-      console.log('\n=== Processing File:', filename, '===');
-
-      // Process the file content (first run - adding the run numbers)
-      const modifiedContent = data.split('\n').map(line => {
-        if (!line.trim()) return line;
-        const columns = line.split(';');
-        if (columns.length < 2) return line;
-        
-        const lastColumn = columns[columns.length - 1].trim();
-        const lastValue = parseInt(lastColumn);
-        
-        let newColumnValue = Math.ceil(lastValue / 4);
-        newColumnValue = Math.min(newColumnValue, 50);
-        
-        columns.splice(columns.length - 1, 0, newColumnValue.toString());
-        
-        return columns.join(';');
-      }).join('\n');
-
-      // Remove the first run content logging
-      let lines = modifiedContent.split('\n');
+    const firstLine = data.split('\n')[0];
+    if (firstLine && skipPatterns.some(pattern => firstLine.includes(pattern))) {
+      console.log(`${filename} contains skip pattern, moving to SAV without processing`);
       
-      // Count occurrences of each run number
-      const runCounts = {};
-      lines.forEach(line => {
-        if (!line.trim()) return;
-        const columns = line.split(';');
-        const runNumber = parseInt(columns[columns.length - 2]); // Get run number
-        runCounts[runNumber] = (runCounts[runNumber] || 0) + 1;
-      });
-
-      console.log('\nInitial run distribution:');
-      Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
-        console.log(`Run ${run}: ${count} entries`);
-      });
-
-      // Process run numbers that exceed 999
-      let needsReprocessing;
-      let iteration = 0;
-      do {
-        needsReprocessing = false;
-        iteration++;
-        
-        // Sort run numbers to process them in order
-        const sortedRunNumbers = Object.keys(runCounts)
-          .map(Number)
-          .sort((a, b) => a - b);
-
-        for (const runNumber of sortedRunNumbers) {
-          if (runCounts[runNumber] > 999) {
-            needsReprocessing = true;
-            
-            // Simplified logging for splits
-            console.log(`\nSplitting run ${runNumber} (${runCounts[runNumber]} entries) into:`);
-            console.log(`Run ${runNumber}: ${Math.floor(runCounts[runNumber] / 2)} entries`);
-            console.log(`Run ${runNumber + 1}: ${runCounts[runNumber] - Math.floor(runCounts[runNumber] / 2)} entries`);
-            
-            let processed = 0;
-            
-            // First, shift all higher run numbers up by 1
-            const oldRunCounts = {...runCounts};
-            Object.keys(oldRunCounts)
-              .map(Number)
-              .filter(run => run > runNumber)
-              .sort((a, b) => b - a)  // Process in reverse order to avoid overwriting
-              .forEach(run => {
-                runCounts[run + 1] = oldRunCounts[run];
-                delete runCounts[run];
-              });
-            
-            // Now split the current run
-            lines = lines.map(line => {
-              if (!line.trim()) return line;
-              const columns = line.split(';');
-              const currentRunNumber = parseInt(columns[columns.length - 2]);
-              
-              if (currentRunNumber === runNumber) {
-                processed++;
-                const newRunNumber = processed <= Math.floor(runCounts[runNumber] / 2) ? runNumber : runNumber + 1;
-                columns[columns.length - 2] = newRunNumber.toString();
-              } else if (currentRunNumber > runNumber) {
-                columns[columns.length - 2] = (currentRunNumber + 1).toString();
-              }
-              
-              return columns.join(';');
-            });
-            
-            // Update run counts for the split run
-            runCounts[runNumber] = Math.floor(oldRunCounts[runNumber] / 2);
-            runCounts[runNumber + 1] = oldRunCounts[runNumber] - Math.floor(oldRunCounts[runNumber] / 2);
-          }
-        }
-      } while (needsReprocessing);
-
-      console.log('\nFinal run distribution:');
-      Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
-        console.log(`Run ${run}: ${count} entries`);
-      });
-      console.log('\n');
-
-      // Remove all other content logging
-      const finalContent = lines.join('\n');
-
-      // Write to TEMP folder
-      fs.writeFile(tempPath, finalContent, (err) => {
-        if (err) {
-          console.error(`Error writing ${filename} to TEMP:`, err);
-        } else {
-          console.log(`Modified and copied ${filename} to TEMP (overwriting if existed).`);
-        }
-      });
-
-      // Write to SAV folder and then delete the source file
-      fs.writeFile(savPath, finalContent, (err) => {
+      // Move directly to SAV and delete from SOURCE
+      fs.writeFile(savPath, data, (err) => {
         if (err) {
           console.error(`Error writing ${filename} to SAV:`, err);
         } else {
-          console.log(`Modified and copied ${filename} to SAV.`);
+          console.log(`Copied ${filename} to SAV.`);
           fs.unlink(sourcePath, (err) => {
             if (err) {
               console.error(`Error deleting ${filename} from SOURCE:`, err);
@@ -160,6 +76,172 @@ function processImpFile(filename) {
             }
           });
         }
+      });
+      return;
+    }
+
+    // Read settings at the start of processing each file
+    try {
+      const settingsContent = fs.readFileSync(SETTINGS_PATH, 'utf8');
+      const parsedValue = parseInt(settingsContent.trim());
+      if (!isNaN(parsedValue) && parsedValue > 0) {
+        divisionFactor = parsedValue;
+        console.log(`Using division factor: ${divisionFactor} from settings.txt`);
+      } else {
+        console.warn('Invalid division factor in settings.txt, using default value of 4');
+        divisionFactor = 4;
+      }
+    } catch (err) {
+      console.warn('Could not read settings.txt, using default division factor of 4');
+      divisionFactor = 4;
+    }
+
+    // Check if file exists to avoid processing an already-removed file
+    fs.stat(sourcePath, (err) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          console.log(`${filename} no longer exists, skipping.`);
+        } else {
+          console.error(`Error stating ${filename}:`, err);
+        }
+        return;
+      }
+
+      // Read and modify the file content
+      fs.readFile(sourcePath, 'utf8', (err, data) => {
+        if (err) {
+          console.error(`Error reading ${filename}:`, err);
+          return;
+        }
+
+        // Remove initial file content logging
+        console.log('\n=== Processing File:', filename, '===');
+
+        // Process the file content (first run - adding the run numbers)
+        const modifiedContent = data.split('\n').map(line => {
+          if (!line.trim()) return line;
+          const columns = line.split(';');
+          if (columns.length < 2) return line;
+          
+          const lastColumn = columns[columns.length - 1].trim();
+          const lastValue = parseInt(lastColumn);
+          
+          let newColumnValue = Math.ceil(lastValue / divisionFactor); // Using the value from settings
+          newColumnValue = Math.min(newColumnValue, 50);
+          
+          columns.splice(columns.length - 1, 0, newColumnValue.toString());
+          
+          return columns.join(';');
+        }).join('\n');
+
+        // Remove the first run content logging
+        let lines = modifiedContent.split('\n');
+        
+        // Count occurrences of each run number
+        const runCounts = {};
+        lines.forEach(line => {
+          if (!line.trim()) return;
+          const columns = line.split(';');
+          const runNumber = parseInt(columns[columns.length - 2]); // Get run number
+          runCounts[runNumber] = (runCounts[runNumber] || 0) + 1;
+        });
+
+        console.log('\nInitial run distribution:');
+        Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
+          console.log(`Run ${run}: ${count} entries`);
+        });
+
+        // Process run numbers that exceed 999
+        let needsReprocessing;
+        let iteration = 0;
+        do {
+          needsReprocessing = false;
+          iteration++;
+          
+          // Sort run numbers to process them in order
+          const sortedRunNumbers = Object.keys(runCounts)
+            .map(Number)
+            .sort((a, b) => a - b);
+
+          for (const runNumber of sortedRunNumbers) {
+            if (runCounts[runNumber] > 999) {
+              needsReprocessing = true;
+              
+              // Simplified logging for splits
+              console.log(`\nSplitting run ${runNumber} (${runCounts[runNumber]} entries) into:`);
+              console.log(`Run ${runNumber}: ${Math.floor(runCounts[runNumber] / 2)} entries`);
+              console.log(`Run ${runNumber + 1}: ${runCounts[runNumber] - Math.floor(runCounts[runNumber] / 2)} entries`);
+              
+              let processed = 0;
+              
+              // First, shift all higher run numbers up by 1
+              const oldRunCounts = {...runCounts};
+              Object.keys(oldRunCounts)
+                .map(Number)
+                .filter(run => run > runNumber)
+                .sort((a, b) => b - a)  // Process in reverse order to avoid overwriting
+                .forEach(run => {
+                  runCounts[run + 1] = oldRunCounts[run];
+                  delete runCounts[run];
+                });
+              
+              // Now split the current run
+              lines = lines.map(line => {
+                if (!line.trim()) return line;
+                const columns = line.split(';');
+                const currentRunNumber = parseInt(columns[columns.length - 2]);
+                
+                if (currentRunNumber === runNumber) {
+                  processed++;
+                  const newRunNumber = processed <= Math.floor(runCounts[runNumber] / 2) ? runNumber : runNumber + 1;
+                  columns[columns.length - 2] = newRunNumber.toString();
+                } else if (currentRunNumber > runNumber) {
+                  columns[columns.length - 2] = (currentRunNumber + 1).toString();
+                }
+                
+                return columns.join(';');
+              });
+              
+              // Update run counts for the split run
+              runCounts[runNumber] = Math.floor(oldRunCounts[runNumber] / 2);
+              runCounts[runNumber + 1] = oldRunCounts[runNumber] - Math.floor(oldRunCounts[runNumber] / 2);
+            }
+          }
+        } while (needsReprocessing);
+
+        console.log('\nFinal run distribution:');
+        Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
+          console.log(`Run ${run}: ${count} entries`);
+        });
+        console.log('\n');
+
+        // Remove all other content logging
+        const finalContent = lines.join('\n');
+
+        // Write to TEMP folder
+        fs.writeFile(tempPath, finalContent, (err) => {
+          if (err) {
+            console.error(`Error writing ${filename} to TEMP:`, err);
+          } else {
+            console.log(`Modified and copied ${filename} to TEMP (overwriting if existed).`);
+          }
+        });
+
+        // Write to SAV folder and then delete the source file
+        fs.writeFile(savPath, finalContent, (err) => {
+          if (err) {
+            console.error(`Error writing ${filename} to SAV:`, err);
+          } else {
+            console.log(`Modified and copied ${filename} to SAV.`);
+            fs.unlink(sourcePath, (err) => {
+              if (err) {
+                console.error(`Error deleting ${filename} from SOURCE:`, err);
+              } else {
+                console.log(`Deleted ${filename} from SOURCE.`);
+              }
+            });
+          }
+        });
       });
     });
   });
@@ -235,7 +317,7 @@ app.get('/api/dimter-numbers', (req, res) => {
                         if (columns.length >= 9) {
                             return {
                                 id: columns[8].substring(0, 12),
-                                value: columns[columns.length - 1].trim()
+                                value: columns[columns.length - 2].trim()
                             };
                         }
                         return null;
@@ -248,6 +330,37 @@ app.get('/api/dimter-numbers', (req, res) => {
                 res.status(500).json({ error: 'Error processing file data' });
             }
         });
+    });
+});
+
+// Add these endpoints before the app.listen line
+app.get('/api/settings', (req, res) => {
+    fs.readFile(SETTINGS_PATH, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ 
+                error: 'Error reading settings', 
+                value: 4 // Return default value if file can't be read
+            });
+        }
+        const value = parseInt(data.trim()) || 4;
+        res.json({ value });
+    });
+});
+
+app.post('/api/settings', express.json(), (req, res) => {
+    const { value } = req.body;
+    const numValue = parseInt(value);
+
+    // Validate the input
+    if (isNaN(numValue) || numValue <= 0) {
+        return res.status(400).json({ error: 'Invalid value. Must be a positive number.' });
+    }
+
+    fs.writeFile(SETTINGS_PATH, numValue.toString(), 'utf8', (err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error saving settings' });
+        }
+        res.json({ value: numValue });
     });
 });
 
