@@ -2,10 +2,13 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 
 const SOURCE_DIR = path.join(__dirname, 'SOURCE');
 const TEMP_DIR = path.join(__dirname, 'TEMP');
 const SAV_DIR = path.join(__dirname, 'SAV');
+const LOG_DIR = path.join(__dirname, 'LOGS', 'IMPSERVER');
 
 // Add settings file path and read settings
 const SETTINGS_PATH = path.join(__dirname, 'settings.txt');
@@ -17,6 +20,33 @@ let skipPatterns = ['-VKa']; // Default value with original pattern
 
 // Set to track files that are already being processed
 const processingFiles = new Set();
+
+// Add this near the top of the file with other global variables
+let currentDimterData = { entries: [] };
+
+// Create logs directory if it doesn't exist
+if (!fs.existsSync(LOG_DIR)) {
+  fs.mkdirSync(LOG_DIR, { recursive: true });
+}
+
+// Function to get current date formatted as YYYY-MM-DD
+function getFormattedDate() {
+  const date = new Date();
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+// Function to write to log file
+function writeToLog(message) {
+  const timestamp = new Date().toISOString();
+  const logMessage = `${timestamp} - ${message}\n`;
+  const logFile = path.join(LOG_DIR, `${getFormattedDate()}.txt`);
+  
+  fs.appendFile(logFile, logMessage, (err) => {
+    if (err) {
+      console.error('Error writing to log file:', err);
+    }
+  });
+}
 
 function loadSkipPatterns() {
   try {
@@ -51,28 +81,42 @@ function processImpFile(filename) {
   const tempPath = path.join(TEMP_DIR, filename);
   const savPath = path.join(SAV_DIR, filename);
 
+  writeToLog(`Processing file: ${filename}`);
+
   // First, check if the file contains any skip patterns in the first line
   fs.readFile(sourcePath, 'utf8', (err, data) => {
     if (err) {
-      console.error(`Error reading ${filename}:`, err);
+      const errorMsg = `Error reading ${filename}: ${err}`;
+      console.error(errorMsg);
+      writeToLog(errorMsg);
       return;
     }
 
     const firstLine = data.split('\n')[0];
     if (firstLine && skipPatterns.some(pattern => firstLine.includes(pattern))) {
-      console.log(`${filename} contains skip pattern, moving to SAV without processing`);
+      const skipMsg = `${filename} contains skip pattern, moving to SAV without processing`;
+      console.log(skipMsg);
+      writeToLog(skipMsg);
       
       // Move directly to SAV and delete from SOURCE
       fs.writeFile(savPath, data, (err) => {
         if (err) {
-          console.error(`Error writing ${filename} to SAV:`, err);
+          const errorMsg = `Error writing ${filename} to SAV: ${err}`;
+          console.error(errorMsg);
+          writeToLog(errorMsg);
         } else {
-          console.log(`Copied ${filename} to SAV.`);
+          const successMsg = `Copied ${filename} to SAV.`;
+          console.log(successMsg);
+          writeToLog(successMsg);
           fs.unlink(sourcePath, (err) => {
             if (err) {
-              console.error(`Error deleting ${filename} from SOURCE:`, err);
+              const errorMsg = `Error deleting ${filename} from SOURCE: ${err}`;
+              console.error(errorMsg);
+              writeToLog(errorMsg);
             } else {
-              console.log(`Deleted ${filename} from SOURCE.`);
+              const deleteMsg = `Deleted ${filename} from SOURCE.`;
+              console.log(deleteMsg);
+              writeToLog(deleteMsg);
             }
           });
         }
@@ -86,13 +130,19 @@ function processImpFile(filename) {
       const parsedValue = parseInt(settingsContent.trim());
       if (!isNaN(parsedValue) && parsedValue > 0) {
         divisionFactor = parsedValue;
-        console.log(`Using division factor: ${divisionFactor} from settings.txt`);
+        const settingsMsg = `Using division factor: ${divisionFactor} from settings.txt`;
+        console.log(settingsMsg);
+        writeToLog(settingsMsg);
       } else {
-        console.warn('Invalid division factor in settings.txt, using default value of 4');
+        const warnMsg = 'Invalid division factor in settings.txt, using default value of 4';
+        console.warn(warnMsg);
+        writeToLog(warnMsg);
         divisionFactor = 4;
       }
     } catch (err) {
-      console.warn('Could not read settings.txt, using default division factor of 4');
+      const warnMsg = 'Could not read settings.txt, using default division factor of 4';
+      console.warn(warnMsg);
+      writeToLog(warnMsg);
       divisionFactor = 4;
     }
 
@@ -110,12 +160,15 @@ function processImpFile(filename) {
       // Read and modify the file content
       fs.readFile(sourcePath, 'utf8', (err, data) => {
         if (err) {
-          console.error(`Error reading ${filename}:`, err);
+          const errorMsg = `Error reading ${filename}: ${err}`;
+          console.error(errorMsg);
+          writeToLog(errorMsg);
           return;
         }
 
-        // Remove initial file content logging
-        console.log('\n=== Processing File:', filename, '===');
+        const processingMsg = `\n=== Processing File: ${filename} ===`;
+        console.log(processingMsg);
+        writeToLog(processingMsg);
 
         // Process the file content (first run - adding the run numbers)
         const modifiedContent = data.split('\n').map(line => {
@@ -146,9 +199,11 @@ function processImpFile(filename) {
           runCounts[runNumber] = (runCounts[runNumber] || 0) + 1;
         });
 
-        console.log('\nInitial run distribution:');
+        writeToLog('\nInitial run distribution:');
         Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
-          console.log(`Run ${run}: ${count} entries`);
+          const runMsg = `Run ${run}: ${count} entries`;
+          console.log(runMsg);
+          writeToLog(runMsg);
         });
 
         // Process run numbers that exceed 999
@@ -168,9 +223,16 @@ function processImpFile(filename) {
               needsReprocessing = true;
               
               // Simplified logging for splits
-              console.log(`\nSplitting run ${runNumber} (${runCounts[runNumber]} entries) into:`);
-              console.log(`Run ${runNumber}: ${Math.floor(runCounts[runNumber] / 2)} entries`);
-              console.log(`Run ${runNumber + 1}: ${runCounts[runNumber] - Math.floor(runCounts[runNumber] / 2)} entries`);
+              const splitMsg = `\nSplitting run ${runNumber} (${runCounts[runNumber]} entries) into:`;
+              console.log(splitMsg);
+              writeToLog(splitMsg);
+              
+              const split1 = `Run ${runNumber}: ${Math.floor(runCounts[runNumber] / 2)} entries`;
+              const split2 = `Run ${runNumber + 1}: ${runCounts[runNumber] - Math.floor(runCounts[runNumber] / 2)} entries`;
+              console.log(split1);
+              console.log(split2);
+              writeToLog(split1);
+              writeToLog(split2);
               
               let processed = 0;
               
@@ -209,9 +271,11 @@ function processImpFile(filename) {
           }
         } while (needsReprocessing);
 
-        console.log('\nFinal run distribution:');
+        writeToLog('\nFinal run distribution:');
         Object.entries(runCounts).sort((a, b) => a[0] - b[0]).forEach(([run, count]) => {
-          console.log(`Run ${run}: ${count} entries`);
+          const runMsg = `Run ${run}: ${count} entries`;
+          console.log(runMsg);
+          writeToLog(runMsg);
         });
         console.log('\n');
 
@@ -221,23 +285,35 @@ function processImpFile(filename) {
         // Write to TEMP folder
         fs.writeFile(tempPath, finalContent, (err) => {
           if (err) {
-            console.error(`Error writing ${filename} to TEMP:`, err);
+            const errorMsg = `Error writing ${filename} to TEMP: ${err}`;
+            console.error(errorMsg);
+            writeToLog(errorMsg);
           } else {
-            console.log(`Modified and copied ${filename} to TEMP (overwriting if existed).`);
+            const successMsg = `Modified and copied ${filename} to TEMP (overwriting if existed).`;
+            console.log(successMsg);
+            writeToLog(successMsg);
           }
         });
 
         // Write to SAV folder and then delete the source file
         fs.writeFile(savPath, finalContent, (err) => {
           if (err) {
-            console.error(`Error writing ${filename} to SAV:`, err);
+            const errorMsg = `Error writing ${filename} to SAV: ${err}`;
+            console.error(errorMsg);
+            writeToLog(errorMsg);
           } else {
-            console.log(`Modified and copied ${filename} to SAV.`);
+            const successMsg = `Modified and copied ${filename} to SAV.`;
+            console.log(successMsg);
+            writeToLog(successMsg);
             fs.unlink(sourcePath, (err) => {
               if (err) {
-                console.error(`Error deleting ${filename} from SOURCE:`, err);
+                const errorMsg = `Error deleting ${filename} from SOURCE: ${err}`;
+                console.error(errorMsg);
+                writeToLog(errorMsg);
               } else {
-                console.log(`Deleted ${filename} from SOURCE.`);
+                const deleteMsg = `Deleted ${filename} from SOURCE.`;
+                console.log(deleteMsg);
+                writeToLog(deleteMsg);
               }
             });
           }
@@ -251,7 +327,11 @@ function processImpFile(filename) {
 function createDirectoryWatcher(directory, dirName) {
   fs.watch(directory, (eventType, filename) => {
     if (filename && path.extname(filename) === '.imp') {
-      if (eventType === 'rename') {
+      if (eventType === 'rename' || eventType === 'change') {
+        if (dirName === 'TEMP' && filename === 'Dimter.imp') {
+          // Emit updated dimter data when the file changes
+          setTimeout(emitDimterData, 100); // Small delay to ensure file is written
+        }
         // In fs.watch, 'rename' event occurs for both creation and deletion
         fs.stat(path.join(directory, filename), (err) => {
           if (err && err.code === 'ENOENT') {
@@ -289,6 +369,8 @@ console.log(`Watching for .imp files in:`);
 console.log(`SOURCE: ${SOURCE_DIR}`);
 console.log(`SAV: ${SAV_DIR}`);
 console.log(`TEMP: ${TEMP_DIR}`);
+writeToLog('IMP Server started successfully');
+writeToLog(`Watching directories - SOURCE: ${SOURCE_DIR}, SAV: ${SAV_DIR}, TEMP: ${TEMP_DIR}`);
 
 const app = express();
 app.use(cors());
@@ -317,7 +399,7 @@ app.get('/api/dimter-numbers', (req, res) => {
                         if (columns.length >= 9) {
                             return {
                                 id: columns[8].substring(0, 12),
-                                value: columns[columns.length - 2].trim()
+                                value: columns[columns.length - 1].trim()
                             };
                         }
                         return null;
@@ -364,8 +446,80 @@ app.post('/api/settings', express.json(), (req, res) => {
     });
 });
 
-// Add this at the bottom of your file if not already present
+// Create HTTP server and Socket.IO instance
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+// Modify the emitDimterData function to store the current data
+function emitDimterData() {
+    const tempPath = path.join(__dirname, 'TEMP', 'Dimter.imp');
+    
+    fs.access(tempPath, fs.constants.F_OK, (err) => {
+        if (err) {
+            const msg = 'Initial Dimter data: NO DIMTER FILER';
+            writeToLog(msg);
+            currentDimterData = { message: 'NO DIMTER FILER' };
+            io.emit('dimterData', currentDimterData);
+            return;
+        }
+
+        fs.readFile(tempPath, 'utf8', (err, data) => {
+            if (err) {
+                const msg = `Error reading initial Dimter.imp file: ${err}`;
+                writeToLog(msg);
+                io.emit('dimterError', { error: 'Error reading Dimter.imp file' });
+                return;
+            }
+
+            try {
+                const lines = data.split('\n');
+                const entries = lines
+                    .filter(line => line.trim())
+                    .map(line => {
+                        const columns = line.split(';');
+                        if (columns.length >= 9) {
+                            return {
+                                id: columns[8].substring(0, 12),
+                                value: columns[columns.length - 1].trim()
+                            };
+                        }
+                        return null;
+                    })
+                    .filter(entry => entry !== null)
+                    .slice(0, 5000);
+
+                currentDimterData = { entries };
+                const msg = `Initial Dimter data loaded successfully with ${entries.length} entries`;
+                writeToLog(msg);
+                io.emit('dimterData', currentDimterData);
+            } catch (error) {
+                const msg = `Error processing initial Dimter data: ${error}`;
+                writeToLog(msg);
+                io.emit('dimterError', { error: 'Error processing file data' });
+            }
+        });
+    });
+}
+
+// Add this with your other socket.io event handlers
+io.on('connection', (socket) => {
+    socket.on('requestInitialData', () => {
+        // Send the current Dimter data to the requesting client
+        socket.emit('dimterData', currentDimterData);
+    });
+});
+
+// Start server and initialize data
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    writeToLog(`Server started on port ${PORT}`);
+    
+    // Emit initial Dimter data after server is fully started
+    emitDimterData();
 });

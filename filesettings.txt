@@ -1,4 +1,5 @@
--VKa
--HKa
--TKa
--BKa
+-VRa
+-HRa
+-TRa
+-BRa
+-LST

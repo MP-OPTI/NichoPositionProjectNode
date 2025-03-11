@@ -1,0 +1,29 @@
+2025-03-11T11:13:25.779Z - IMP Server started successfully
+2025-03-11T11:13:25.780Z - Watching directories - SOURCE: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\SOURCE, SAV: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\SAV, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-11T11:13:25.788Z - Server started on port 3001
+2025-03-11T11:13:25.793Z - Initial Dimter data loaded successfully with 1106 entries
+2025-03-11T11:13:25.899Z - Initial Dimter data loaded successfully with 1106 entries
+2025-03-11T12:13:40.282Z - Initial Dimter data loaded successfully with 1106 entries
+2025-03-11T12:45:04.628Z - Processing file: Dimter.imp
+2025-03-11T12:45:04.684Z - Using division factor: 3 from settings.txt
+2025-03-11T12:45:04.716Z - 
+=== Processing File: Dimter.imp ===
+2025-03-11T12:45:04.718Z - 
+Initial run distribution:
+2025-03-11T12:45:04.723Z - Run 1: 288 entries
+2025-03-11T12:45:04.724Z - Run 2: 12 entries
+2025-03-11T12:45:04.724Z - 
+Final run distribution:
+2025-03-11T12:45:04.735Z - Run 1: 288 entries
+2025-03-11T12:45:04.739Z - Run 2: 12 entries
+2025-03-11T12:45:04.756Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-11T12:45:04.757Z - Modified and copied Dimter.imp to SAV.
+2025-03-11T12:45:04.759Z - Deleted Dimter.imp from SOURCE.
+2025-03-11T12:45:04.862Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T12:45:04.867Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T12:45:04.875Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T13:25:10.858Z - IMP Server started successfully
+2025-03-11T13:25:10.859Z - Watching directories - SOURCE: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\SOURCE, SAV: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\SAV, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-11T13:25:10.868Z - Server started on port 3001
+2025-03-11T13:25:10.870Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T13:45:07.307Z - Initial Dimter data loaded successfully with 300 entries

@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const ModbusRTU = require("modbus-serial");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -20,6 +24,46 @@ let isConnected = false;
 
 // Add variable to store previous values
 let previousValues = null;
+
+// Add at the top with other constants
+const NO_CHANGE_INTERVAL = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+// Add with other global variables
+let lastChangeTime = Date.now();
+
+// Create HTTP server and Socket.IO instance
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*", // Configure this according to your frontend URL
+        methods: ["GET", "POST"]
+    }
+});
+
+// Add logging utility functions
+function getLogFileName() {
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    return path.join(__dirname, 'LOGS/MODSERVER', `modbus_${date}.log`);
+}
+
+function ensureLogDirectory() {
+    const logDir = path.join(__dirname, 'LOGS/MODSERVER');
+    if (!fs.existsSync(logDir)) {
+        fs.mkdirSync(logDir);
+    }
+}
+
+function writeToLog(message) {
+    const timestamp = new Date().toISOString();
+    const logEntry = `${timestamp} - ${message}\n`;
+    const logFile = getLogFileName();
+    
+    fs.appendFile(logFile, logEntry, (err) => {
+        if (err) {
+            console.error('Error writing to log file:', err);
+        }
+    });
+}
 
 // Modified connect function with retry logic
 async function connectModbus1() {
@@ -43,37 +87,75 @@ async function readHoldingRegistersFromPLC1() {
     }
     try {
         const data = await modbusClient1.readHoldingRegisters(START_REGISTER, NUMBER_OF_REGISTERS);
+        // If we successfully read data, ensure isConnected is true
+        isConnected = true;
         return data.data;
     } catch (error) {
+        console.error("Error reading Holding Registers from PLC 1:", error);
         isConnected = false;
-        if (error.message.includes("Illegal data address")) {
-            throw new Error(`Register range ${START_REGISTER}-${START_REGISTER + NUMBER_OF_REGISTERS - 1} not available`);
-        } else {
-            console.error("Error reading Holding Registers from PLC 1:", error);
-            // Attempt to reconnect
-            setTimeout(connectModbus1, RETRY_INTERVAL);
-            throw new Error("Connection lost to Modbus server");
+        
+        // Close the connection explicitly on error
+        try {
+            await modbusClient1.close();
+        } catch (closeError) {
+            console.error("Error closing connection:", closeError);
         }
+
+        // Attempt to reconnect
+        setTimeout(connectModbus1, RETRY_INTERVAL);
+        throw new Error("Connection lost to Modbus server");
     }
 }
 
-// Modified reading loop with change detection
+// Modified reading loop with WebSocket emission and console logging
 async function startReadingLoop1() {
     setInterval(async () => {
         try {
             const values = await readHoldingRegistersFromPLC1();
             if (values) {
                 const combinedString = values.join('');
-                // Only log if values have changed
+                const currentTime = Date.now();
+                
+                // Only emit and log if values have changed
                 if (!previousValues || !arraysEqual(values, previousValues)) {
-                    console.log('Combined string:', combinedString);
+                    const data = {
+                        combinedString: combinedString,
+                        connectionStatus: isConnected,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    io.emit('modbusData', data);
+                    
+                    // Log the changed values
+                    const logMessage = JSON.stringify(data);
+                    writeToLog(logMessage);
+                    
                     previousValues = [...values];
+                    lastChangeTime = currentTime;
+                } else if (currentTime - lastChangeTime >= NO_CHANGE_INTERVAL) {
+                    // Log current state with NO CHANGES flag if 10 minutes have passed
+                    const data = {
+                        combinedString: combinedString,
+                        connectionStatus: isConnected,
+                        timestamp: new Date().toISOString(),
+                        status: "NO CHANGES"
+                    };
+                    
+                    writeToLog(JSON.stringify(data));
+                    lastChangeTime = currentTime; // Reset the timer
                 }
             }
         } catch (error) {
-            console.error('Reading loop error:', error.message);
+            const errorMessage = JSON.stringify({
+                error: error.message,
+                connectionStatus: isConnected,
+                timestamp: new Date().toISOString()
+            });
+            
+            io.emit('modbusError', JSON.parse(errorMessage));
+            writeToLog(`ERROR: ${errorMessage}`);
         }
-    }, 250);
+    }, 50);
 }
 
 // Helper function to compare arrays
@@ -103,30 +185,11 @@ app.get("/modbus-plc1", async (req, res) => {
     }
 });
 
-// New endpoint for the boolean register
-app.get("/modbus-plc1/status", async (req, res) => {
-    try {
-        const values = await readHoldingRegistersFromPLC1();
-        if (values) {
-            const booleanValue = values[12] === 1;
-            res.json({ 
-                status: booleanValue,
-                timestamp: new Date().toISOString()
-            });
-        } else {
-            throw new Error("No values received from PLC");
-        }
-    } catch (error) {
-        res.status(503).json({ 
-            error: error.message,
-            status: "disconnected",
-            timestamp: new Date().toISOString()
-        });
-    }
-});
-
+// Modify the server startup to ensure log directory exists
 const PORT = 5000;
-app.listen(PORT, async () => {
+httpServer.listen(PORT, async () => {
+    ensureLogDirectory();
     await connectModbus1();
+    writeToLog('Server started');
     console.log(`Modbus Server API running on port ${PORT}`);
 });
