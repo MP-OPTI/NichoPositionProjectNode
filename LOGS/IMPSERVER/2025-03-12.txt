@@ -250,3 +250,55 @@ Final run distribution:
 2025-03-12T11:45:27.900Z - Deleted Dimter.imp from SOURCE.
 2025-03-12T11:45:27.958Z - Initial Dimter data loaded successfully with 18 entries
 2025-03-12T11:45:27.958Z - Initial Dimter data loaded successfully with 18 entries
+2025-03-12T11:59:48.921Z - IMP Server started successfully
+2025-03-12T11:59:48.924Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-12T11:59:48.932Z - Server started on port 3001
+2025-03-12T11:59:48.935Z - Initial Dimter data loaded successfully with 18 entries
+2025-03-12T12:00:30.047Z - Processing file: Dimter.imp
+2025-03-12T12:00:30.073Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T12:00:30.089Z - Copied Dimter.imp to SAV.
+2025-03-12T12:00:30.102Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:03:39.022Z - Processing file: Dimter.imp
+2025-03-12T12:03:39.045Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T12:03:39.061Z - Copied Dimter.imp to SAV.
+2025-03-12T12:03:39.072Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:05:26.183Z - IMP Server started successfully
+2025-03-12T12:05:26.187Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-12T12:05:26.196Z - Server started on port 3001
+2025-03-12T12:05:26.198Z - Initial Dimter data loaded successfully with 18 entries
+2025-03-12T12:05:38.267Z - Processing file: Dimter.imp
+2025-03-12T12:05:38.289Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T12:05:38.304Z - Copied Dimter.imp to SAV.
+2025-03-12T12:05:38.316Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:11:21.393Z - Processing file: Dimter.imp
+2025-03-12T12:11:21.417Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T12:11:21.435Z - Copied Dimter.imp to SAV.
+2025-03-12T12:11:21.451Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:21:27.974Z - IMP Server started successfully
+2025-03-12T12:21:27.976Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-12T12:21:27.988Z - Server started on port 3001
+2025-03-12T12:21:27.991Z - Initial Dimter data loaded successfully with 18 entries
+2025-03-12T12:36:20.591Z - Processing file: Dimter.imp
+2025-03-12T12:36:20.615Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T12:36:20.649Z - Copied Dimter.imp to SAV.
+2025-03-12T12:36:20.658Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:38:06.273Z - Processing file: Dimter.imp
+2025-03-12T12:38:06.285Z - Using division factor: 1 from settings.txt
+2025-03-12T12:38:06.296Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T12:38:06.298Z - 
+Initial run distribution:
+2025-03-12T12:38:06.298Z - Run 1: 26 entries
+2025-03-12T12:38:06.299Z - Run 2: 12 entries
+2025-03-12T12:38:06.299Z - Run 3: 13 entries
+2025-03-12T12:38:06.299Z - 
+Final run distribution:
+2025-03-12T12:38:06.300Z - Run 1: 26 entries
+2025-03-12T12:38:06.300Z - Run 2: 12 entries
+2025-03-12T12:38:06.301Z - Run 3: 13 entries
+2025-03-12T12:38:06.311Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T12:38:06.316Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T12:38:06.323Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T12:38:06.413Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T12:38:06.415Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T12:38:06.419Z - Initial Dimter data loaded successfully with 51 entries
