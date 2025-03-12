@@ -98,6 +98,13 @@ function processImpFile(filename) {
       console.log(skipMsg);
       writeToLog(skipMsg);
       
+      // This is the correct emit from the server to all connected clients
+      io.emit('fileSkipped', {
+        filename: filename,
+        pattern: skipPatterns.find(pattern => firstLine.includes(pattern)),
+        timestamp: new Date().toISOString()
+      });
+
       // Move directly to SAV and delete from SOURCE
       fs.writeFile(savPath, data, (err) => {
         if (err) {
