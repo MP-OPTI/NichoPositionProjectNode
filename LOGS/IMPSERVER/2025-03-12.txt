@@ -1,0 +1,224 @@
+2025-03-12T01:35:04.246Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-12T01:35:04.238Z - IMP Server started successfully
+2025-03-12T01:35:04.268Z - Server started on port 3001
+2025-03-12T01:35:04.275Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T01:35:04.381Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T02:35:07.550Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T03:35:09.820Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T04:35:12.250Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T05:35:14.804Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T06:35:17.248Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T07:35:20.120Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T08:35:22.834Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T09:35:25.692Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T10:35:31.315Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T10:59:00.631Z - Processing file: Dimter.imp
+2025-03-12T10:59:00.657Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T10:59:00.696Z - Copied Dimter.imp to SAV.
+2025-03-12T10:59:00.711Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:00:20.700Z - Processing file: Dimter.imp
+2025-03-12T11:00:20.717Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:00:20.736Z - Copied Dimter.imp to SAV.
+2025-03-12T11:00:20.746Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:02:16.561Z - Processing file: Dimter.imp
+2025-03-12T11:02:16.594Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:02:16.609Z - Copied Dimter.imp to SAV.
+2025-03-12T11:02:16.618Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:03:03.023Z - Processing file: Dimter.imp
+2025-03-12T11:03:03.059Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:03:03.089Z - Copied Dimter.imp to SAV.
+2025-03-12T11:03:03.101Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:06:20.288Z - Processing file: Dimter.imp
+2025-03-12T11:06:20.314Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:06:20.327Z - Copied Dimter.imp to SAV.
+2025-03-12T11:06:20.356Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:13:55.372Z - IMP Server started successfully
+2025-03-12T11:13:55.373Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-12T11:13:55.388Z - Server started on port 3001
+2025-03-12T11:13:55.390Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-12T11:14:20.939Z - Initial Dimter data: NO DIMTER FILER
+2025-03-12T11:14:28.918Z - Processing file: Dimter.imp
+2025-03-12T11:14:28.949Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:14:28.965Z - Copied Dimter.imp to SAV.
+2025-03-12T11:14:28.981Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:16:26.077Z - Processing file: Dimter.imp
+2025-03-12T11:16:26.100Z - Using division factor: 1 from settings.txt
+2025-03-12T11:16:26.110Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:16:26.112Z - 
+Initial run distribution:
+2025-03-12T11:16:26.114Z - Run 2: 12 entries
+2025-03-12T11:16:26.114Z - Run 3: 13 entries
+2025-03-12T11:16:26.115Z - 
+Final run distribution:
+2025-03-12T11:16:26.116Z - Run 1: 26 entries
+2025-03-12T11:16:26.114Z - Run 1: 26 entries
+2025-03-12T11:16:26.117Z - Run 2: 12 entries
+2025-03-12T11:16:26.118Z - Run 3: 13 entries
+2025-03-12T11:16:26.134Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:16:26.146Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:16:26.154Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:16:26.235Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:16:26.236Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:17:43.935Z - Processing file: Dimter.imp
+2025-03-12T11:17:43.969Z - Using division factor: 1 from settings.txt
+2025-03-12T11:17:43.977Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:17:43.978Z - 
+Initial run distribution:
+2025-03-12T11:17:43.979Z - Run 1: 14 entries
+2025-03-12T11:17:43.981Z - Run 3: 7 entries
+2025-03-12T11:17:43.980Z - Run 2: 4 entries
+2025-03-12T11:17:43.981Z - Run 4: 1 entries
+2025-03-12T11:17:43.982Z - Run 5: 1 entries
+2025-03-12T11:17:43.982Z - Run 6: 1 entries
+2025-03-12T11:17:43.983Z - 
+Final run distribution:
+2025-03-12T11:17:43.983Z - Run 1: 14 entries
+2025-03-12T11:17:43.984Z - Run 2: 4 entries
+2025-03-12T11:17:43.985Z - Run 3: 7 entries
+2025-03-12T11:17:43.986Z - Run 4: 1 entries
+2025-03-12T11:17:43.986Z - Run 5: 1 entries
+2025-03-12T11:17:43.988Z - Run 6: 1 entries
+2025-03-12T11:17:44.002Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:17:44.017Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:17:44.023Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:17:44.106Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:17:44.107Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:17:44.109Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:21:17.709Z - Processing file: Dimter.imp
+2025-03-12T11:21:17.721Z - Using division factor: 1 from settings.txt
+2025-03-12T11:21:17.729Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:21:17.730Z - 
+Initial run distribution:
+2025-03-12T11:21:17.730Z - Run 1: 26 entries
+2025-03-12T11:21:17.731Z - Run 2: 12 entries
+2025-03-12T11:21:17.732Z - Run 3: 13 entries
+2025-03-12T11:21:17.732Z - 
+Final run distribution:
+2025-03-12T11:21:17.733Z - Run 1: 26 entries
+2025-03-12T11:21:17.733Z - Run 2: 12 entries
+2025-03-12T11:21:17.733Z - Run 3: 13 entries
+2025-03-12T11:21:17.742Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:21:17.751Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:21:17.762Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:21:17.848Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:21:17.849Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:21:17.849Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:22:29.259Z - Processing file: Dimter.imp
+2025-03-12T11:22:29.271Z - Using division factor: 1 from settings.txt
+2025-03-12T11:22:29.280Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:22:29.280Z - 
+Initial run distribution:
+2025-03-12T11:22:29.281Z - Run 1: 14 entries
+2025-03-12T11:22:29.282Z - Run 2: 4 entries
+2025-03-12T11:22:29.282Z - Run 3: 7 entries
+2025-03-12T11:22:29.283Z - Run 4: 1 entries
+2025-03-12T11:22:29.284Z - Run 5: 1 entries
+2025-03-12T11:22:29.284Z - Run 6: 1 entries
+2025-03-12T11:22:29.285Z - 
+Final run distribution:
+2025-03-12T11:22:29.285Z - Run 1: 14 entries
+2025-03-12T11:22:29.286Z - Run 2: 4 entries
+2025-03-12T11:22:29.287Z - Run 3: 7 entries
+2025-03-12T11:22:29.287Z - Run 4: 1 entries
+2025-03-12T11:22:29.288Z - Run 5: 1 entries
+2025-03-12T11:22:29.289Z - Run 6: 1 entries
+2025-03-12T11:22:29.302Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:22:29.309Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:22:29.317Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:22:29.414Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:22:29.415Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:22:29.415Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:22:31.939Z - Processing file: Dimter.imp
+2025-03-12T11:22:31.950Z - Using division factor: 1 from settings.txt
+2025-03-12T11:22:31.960Z - 
+Initial run distribution:
+2025-03-12T11:22:31.959Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:22:31.961Z - Run 1: 14 entries
+2025-03-12T11:22:31.961Z - Run 2: 4 entries
+2025-03-12T11:22:31.962Z - Run 3: 7 entries
+2025-03-12T11:22:31.963Z - Run 4: 1 entries
+2025-03-12T11:22:31.964Z - Run 5: 1 entries
+2025-03-12T11:22:31.965Z - Run 6: 1 entries
+2025-03-12T11:22:31.965Z - Run 1: 14 entries
+2025-03-12T11:22:31.965Z - 
+Final run distribution:
+2025-03-12T11:22:31.966Z - Run 2: 4 entries
+2025-03-12T11:22:31.967Z - Run 4: 1 entries
+2025-03-12T11:22:31.967Z - Run 5: 1 entries
+2025-03-12T11:22:31.967Z - Run 6: 1 entries
+2025-03-12T11:22:31.966Z - Run 3: 7 entries
+2025-03-12T11:22:31.974Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:22:31.983Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:22:31.991Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:22:32.079Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:22:32.079Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:23:10.890Z - Processing file: Dimter.imp
+2025-03-12T11:23:10.901Z - Using division factor: 1 from settings.txt
+2025-03-12T11:23:10.909Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:23:10.909Z - 
+Initial run distribution:
+2025-03-12T11:23:10.910Z - Run 1: 14 entries
+2025-03-12T11:23:10.911Z - Run 2: 4 entries
+2025-03-12T11:23:10.912Z - Run 3: 7 entries
+2025-03-12T11:23:10.912Z - Run 4: 1 entries
+2025-03-12T11:23:10.913Z - Run 5: 1 entries
+2025-03-12T11:23:10.913Z - Run 6: 1 entries
+2025-03-12T11:23:10.913Z - 
+Final run distribution:
+2025-03-12T11:23:10.914Z - Run 1: 14 entries
+2025-03-12T11:23:10.914Z - Run 2: 4 entries
+2025-03-12T11:23:10.915Z - Run 5: 1 entries
+2025-03-12T11:23:10.915Z - Run 3: 7 entries
+2025-03-12T11:23:10.915Z - Run 6: 1 entries
+2025-03-12T11:23:10.915Z - Run 4: 1 entries
+2025-03-12T11:23:10.922Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:23:10.930Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:23:10.938Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:23:11.029Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:23:11.030Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:24:01.339Z - Processing file: Dimter.imp
+2025-03-12T11:24:01.349Z - Using division factor: 2 from settings.txt
+2025-03-12T11:24:01.356Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:24:01.356Z - Run 1: 18 entries
+2025-03-12T11:24:01.357Z - Run 2: 8 entries
+2025-03-12T11:24:01.357Z - Run 3: 2 entries
+2025-03-12T11:24:01.358Z - 
+Final run distribution:
+2025-03-12T11:24:01.358Z - Run 1: 18 entries
+2025-03-12T11:24:01.359Z - Run 2: 8 entries
+2025-03-12T11:24:01.356Z - 
+Initial run distribution:
+2025-03-12T11:24:01.359Z - Run 3: 2 entries
+2025-03-12T11:24:01.365Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:24:01.394Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:24:01.404Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:24:01.465Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:24:01.466Z - Initial Dimter data loaded successfully with 28 entries
+2025-03-12T11:25:04.842Z - Processing file: Dimter.imp
+2025-03-12T11:25:04.851Z - Using division factor: 2 from settings.txt
+2025-03-12T11:25:04.857Z - 
+=== Processing File: Dimter.imp ===
+2025-03-12T11:25:04.857Z - 
+Initial run distribution:
+2025-03-12T11:25:04.858Z - Run 1: 38 entries
+2025-03-12T11:25:04.858Z - Run 2: 13 entries
+2025-03-12T11:25:04.858Z - 
+Final run distribution:
+2025-03-12T11:25:04.858Z - Run 1: 38 entries
+2025-03-12T11:25:04.859Z - Run 2: 13 entries
+2025-03-12T11:25:04.866Z - Modified and copied Dimter.imp to TEMP (overwriting if existed).
+2025-03-12T11:25:04.906Z - Modified and copied Dimter.imp to SAV.
+2025-03-12T11:25:04.918Z - Deleted Dimter.imp from SOURCE.
+2025-03-12T11:25:04.967Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:25:04.967Z - Initial Dimter data loaded successfully with 51 entries
+2025-03-12T11:27:17.401Z - Processing file: Dimter.imp
+2025-03-12T11:27:17.443Z - Dimter.imp contains skip pattern, moving to SAV without processing
+2025-03-12T11:27:17.473Z - Copied Dimter.imp to SAV.
+2025-03-12T11:27:17.489Z - Deleted Dimter.imp from SOURCE.

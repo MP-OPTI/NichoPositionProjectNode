@@ -27,3 +27,9 @@ Final run distribution:
 2025-03-11T13:25:10.868Z - Server started on port 3001
 2025-03-11T13:25:10.870Z - Initial Dimter data loaded successfully with 300 entries
 2025-03-11T13:45:07.307Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T14:44:17.057Z - IMP Server started successfully
+2025-03-11T14:44:17.059Z - Watching directories - SOURCE: S:\, SAV: R:\, TEMP: C:\Users\Nicholaisen\Documents\GitHub\NichoPositionProjectNode\TEMP
+2025-03-11T14:44:17.068Z - Server started on port 3001
+2025-03-11T14:44:17.073Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T14:45:07.768Z - Initial Dimter data loaded successfully with 300 entries
+2025-03-11T15:45:08.626Z - Initial Dimter data loaded successfully with 300 entries

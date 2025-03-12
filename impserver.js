@@ -5,9 +5,9 @@ const cors = require('cors');
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 
-const SOURCE_DIR = path.join(__dirname, 'SOURCE');
+const SOURCE_DIR = 'S:\\';
 const TEMP_DIR = path.join(__dirname, 'TEMP');
-const SAV_DIR = path.join(__dirname, 'SAV');
+const SAV_DIR = 'R:\\';
 const LOG_DIR = path.join(__dirname, 'LOGS', 'IMPSERVER');
 
 // Add settings file path and read settings
@@ -16,7 +16,7 @@ let divisionFactor = 4; // Default value
 
 // Add filesettings path and array to store patterns
 const FILESETTINGS_PATH = path.join(__dirname, 'filesettings.txt');
-let skipPatterns = ['-VKa']; // Default value with original pattern
+let skipPatterns = ['-DEFAULT']; // Default value with original pattern
 
 // Set to track files that are already being processed
 const processingFiles = new Set();
@@ -360,9 +360,10 @@ function createDirectoryWatcher(directory, dirName) {
 }
 
 // Create watchers for all three directories
-createDirectoryWatcher(SOURCE_DIR, 'SOURCE');
-createDirectoryWatcher(SAV_DIR, 'SAV');
+createDirectoryWatcher(SOURCE_DIR, 'SOURCE'); //S:\
+createDirectoryWatcher(SAV_DIR, 'SAV'); //R:\
 createDirectoryWatcher(TEMP_DIR, 'TEMP');
+
 
 console.log('IMP Server started successfully');
 console.log(`Watching for .imp files in:`);
